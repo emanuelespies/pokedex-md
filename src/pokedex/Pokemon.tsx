@@ -17,10 +17,12 @@ export default function Pokemon({ name }: PokemonProps) {
   return (
     <li key={pokemonDetail?.id}>
       <p>{name}</p>
-      <img
-        src={pokemonDetail?.sprites.front_default}
-        alt={`Pokemon is ${name}`}
-      />
+      {pokemonDetail?.sprites?.front_default !== null && (
+        <img
+          src={pokemonDetail?.sprites.front_default}
+          alt={`Pokemon is ${name}`}
+        />
+      )}
     </li>
   );
 }

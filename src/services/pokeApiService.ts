@@ -12,12 +12,16 @@ class pokeApiService {
    * Fetch Pokemons from api
    *
    * @param {number} limit - the result limit for each call
+   * @param {number} offset - where to start in the list
    * @return {Promise<PokemonsApiResourceList>}
    * @memberof pokeApiService
    */
-  async fetchPokemons(limit: number): Promise<PokemonsApiResourceList> {
+  async fetchPokemons(
+    limit: number,
+    offset: number
+  ): Promise<PokemonsApiResourceList> {
     const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon?offset=150&limit=${limit}`
+      `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
     );
     if (response.ok) {
       return response.json();

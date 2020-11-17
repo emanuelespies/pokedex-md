@@ -1,25 +1,46 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.scss";
+import Pokemon from "./pokedex/Pokemon";
+import PokemonsApiResourceList from "./services/models/interfaces/PokemonsApiResourceList";
+import pokeApiService from "./services/pokeApiService";
 
 function App() {
+  const [pokemonApiResource, setPokemonApiResource] = useState<
+    PokemonsApiResourceList
+  >(() => {
+    try {
+      return (
+        JSON.parse(localStorage.getItem("pokemonApiResource") || "{}") ?? {}
+      );
+    } catch {
+      console.error("The api resource could not be parsed into JSON");
+      return {};
+    }
+  });
+
+  useEffect(() => {
+    if (!Object.keys(pokemonApiResource).length) {
+      const fetchData = async () => {
+        const pokemons = await pokeApiService.fetchPokemons(150);
+
+        setPokemonApiResource(pokemons);
+        localStorage.setItem("pokemonApiResource", JSON.stringify(pokemons));
+      };
+      fetchData();
+    }
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <header>Welcome to Pokedex MD</header>
+      <section className="pokemon-list">
+        <ul>
+          {pokemonApiResource.results.map((pokemon, index) => (
+            <Pokemon key={index} name={pokemon.name} />
+          ))}
+        </ul>
+      </section>
+    </>
   );
 }
 

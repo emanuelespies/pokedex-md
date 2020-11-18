@@ -1,4 +1,3 @@
-import { off } from "process";
 import React, { useEffect, useState } from "react";
 import PokemonsApiResourceList from "../services/models/interfaces/PokemonsApiResourceList";
 import pokeApiService from "../services/pokeApiService";

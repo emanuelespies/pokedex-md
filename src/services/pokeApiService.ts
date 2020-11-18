@@ -9,6 +9,26 @@ import PokemonsApiResourceList from "./models/interfaces/PokemonsApiResourceList
  */
 class pokeApiService {
   /**
+   * Api Result object, to map messages and result
+   *
+   * @private
+   * @type {PokedexApiResult<any>}
+   * @memberof pokeApiService
+   */
+  private apiResult: PokedexApiResult<any> = {
+    result: {},
+    message: "",
+  };
+
+  /**
+   * Standard Error Message
+   *
+   * @private
+   * @type {string}
+   * @memberof pokeApiService
+   */
+  private errorMessage: string = "Error whilte loading ";
+  /**
    * Fetch Pokemons from api
    *
    * @param {number} limit - the result limit for each call
@@ -16,35 +36,63 @@ class pokeApiService {
    * @return {Promise<PokemonsApiResourceList>}
    * @memberof pokeApiService
    */
+
   async fetchPokemons(
     limit: number,
     offset: number
-  ): Promise<PokemonsApiResourceList> {
+  ): Promise<PokedexApiResult<PokemonsApiResourceList>> {
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
     );
     if (response.ok) {
-      return response.json();
+      this.apiResult.result = await response.json();
+      return this.apiResult;
     } else {
-      throw response;
+      this.apiResult.result = response;
+      this.apiResult.message = this.errorMessage + "Pokemon List";
+      return this.apiResult;
     }
   }
 
   /**
    * Get Pokemon Detail from api
    *
-   * @param {string} pokemonName - the pokemon name to get info for
+   * @param {string} url - the pokemon name to get info for
    * @return {Promise<PokemonDetail>}
    * @memberof pokeApiService
    */
-  async fetchPokemonDetail(pokemonName: string): Promise<PokemonDetail> {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-    );
+  async fetchPokemonDetail(
+    url: string
+  ): Promise<PokedexApiResult<PokemonDetail>> {
+    const response = await fetch(url);
     if (response.ok) {
-      return response.json();
+      this.apiResult.result = await response.json();
+      return this.apiResult;
     } else {
-      throw response;
+      this.apiResult.result = response;
+      this.apiResult.message = this.errorMessage + "Pokemon Detail";
+      return this.apiResult;
+    }
+  }
+
+  /**
+   * Get Pokemon Detail from api
+   *
+   * @param {string} url - the pokemon name to get info for
+   * @return {Promise<PokemonDetail>}
+   * @memberof pokeApiService
+   */
+  async fetchPokemonDetailByName(
+    name: string
+  ): Promise<PokedexApiResult<PokemonDetail>> {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+    if (response.ok) {
+      this.apiResult.result = await response.json();
+      return this.apiResult;
+    } else {
+      this.apiResult.result = response;
+      this.apiResult.message = this.errorMessage + "Pokemon Detail";
+      return this.apiResult;
     }
   }
 
@@ -55,16 +103,26 @@ class pokeApiService {
    * @return {Promise<EvolutionChain>}
    * @memberof pokeApiService
    */
-  async fetchPokemonEvolution(pokemonId: number): Promise<EvolutionChain> {
+  async fetchPokemonEvolution(
+    pokemonId: number
+  ): Promise<PokedexApiResult<EvolutionChain>> {
     const response = await fetch(
       `https://pokeapi.co/api/v2/evolution-chain/${pokemonId}`
     );
     if (response.ok) {
-      return response.json();
+      this.apiResult.result = await response.json();
+      return this.apiResult;
     } else {
-      throw response;
+      this.apiResult.result = response;
+      this.apiResult.message = this.errorMessage + "Evolution Chain";
+      return this.apiResult;
     }
   }
 }
 
 export default new pokeApiService();
+
+export interface PokedexApiResult<T> {
+  result: T;
+  message: string;
+}

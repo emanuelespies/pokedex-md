@@ -1,6 +1,8 @@
+import { off } from "process";
 import React, { useEffect, useState } from "react";
 import PokemonsApiResourceList from "../services/models/interfaces/PokemonsApiResourceList";
 import pokeApiService from "../services/pokeApiService";
+import Loading from "../shared/Loading";
 import PokemonComponent from "./PokemonComponent";
 
 export default function PokemonsComponent() {
@@ -28,20 +30,28 @@ export default function PokemonsComponent() {
   const fetchAmount: number = 150;
   /** the offset to get the next available list of items */
   const [offset, setOffset] = useState<number>(0);
+  /** Error Managing */
+  const [error, setError] = useState<string>("");
 
   /** fetchData only once if we dont have anything in the localStorage */
   useEffect(() => {
     const fetchData = async () => {
-      const pokemons = await pokeApiService.fetchPokemons(fetchAmount, offset);
+      const apiResult = await pokeApiService.fetchPokemons(fetchAmount, offset);
 
-      if (pokemons) {
-        setPokemonApiResource(pokemons);
-        setTotalPokemonsAvailable(pokemons.count);
+      if (!apiResult.message) {
+        setPokemonApiResource(apiResult.result);
+        setTotalPokemonsAvailable(1050);
+        setError("");
 
         // we only want to store the first load to speed up refresh for return users
-        if (!Object.keys(pokemonApiResource).length && page === 0) {
-          localStorage.setItem("pokemonApiResource", JSON.stringify(pokemons));
+        if (!Object.keys(pokemonApiResource).length && page === 1) {
+          localStorage.setItem(
+            "pokemonApiResource",
+            JSON.stringify(apiResult.result)
+          );
         }
+      } else {
+        setError(apiResult.message);
       }
     };
     fetchData();
@@ -49,30 +59,38 @@ export default function PokemonsComponent() {
   }, [offset]);
 
   return (
-    <section className="pokemon-list">
-      <button
-        disabled={page === 1}
-        onClick={() => {
-          setPage(page - 1);
-          setOffset(offset - fetchAmount);
-        }}
-      >
-        Prev
-      </button>
-      <button
-        disabled={totalPokemonsAvailable / fetchAmount === page}
-        onClick={() => {
-          setOffset(fetchAmount + offset);
-          setPage(page + 1);
-        }}
-      >
-        Next
-      </button>
-      <ul>
-        {pokemonApiResource?.results?.map((pokemon, index) => (
-          <PokemonComponent key={index} name={pokemon.name} />
-        ))}
-      </ul>
-    </section>
+    <>
+      {!error && !pokemonApiResource && <Loading />}
+
+      {error && <p> {error} </p>}
+
+      {pokemonApiResource && (
+        <section className="pokemon-list">
+          <button
+            disabled={page === 1}
+            onClick={() => {
+              setPage(page - 1);
+              setOffset(offset - fetchAmount);
+            }}
+          >
+            Prev
+          </button>
+          <button
+            disabled={totalPokemonsAvailable / fetchAmount === page}
+            onClick={() => {
+              setOffset(fetchAmount + offset);
+              setPage(page + 1);
+            }}
+          >
+            Next
+          </button>
+          <ul>
+            {pokemonApiResource?.results?.map((pokemon, index) => {
+              return <PokemonComponent key={index} url={pokemon.url} />;
+            })}
+          </ul>
+        </section>
+      )}
+    </>
   );
 }

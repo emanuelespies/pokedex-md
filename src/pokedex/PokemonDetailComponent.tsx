@@ -38,6 +38,7 @@ export default function PokemonDetailComponent({
     }
   }, [name, detail]);
 
+  /** Once loaded, we get the pokemon evolution details */
   useEffect(() => {
     if (detail) {
       const fetchData = async () => {
@@ -52,6 +53,25 @@ export default function PokemonDetailComponent({
       fetchData();
     }
   }, [detail]);
+
+  /** since evolution is an array of array we must have a recursive mapping */
+  const Evolution = ({ evolves_to }: { evolves_to: ChainLink[] }) => {
+    return (
+      <ul>
+        {evolves_to.map((e: ChainLink, i) => {
+          return (
+            <li key={i}>
+              {e.species.name}
+              {!!e.evolution_details.length && (
+                <p>LVL: {e.evolution_details[0].min_level}</p>
+              )}
+              {!!e.evolves_to.length && <Evolution evolves_to={e.evolves_to} />}
+            </li>
+          );
+        })}
+      </ul>
+    );
+  };
 
   return (
     <>
@@ -72,7 +92,7 @@ export default function PokemonDetailComponent({
           ))}
         </>
       )}
-      {pokemonEvolutionChain && (
+      {pokemonEvolutionChain ? (
         <>
           <h2>Chain:</h2>
           <p>
@@ -80,9 +100,11 @@ export default function PokemonDetailComponent({
             {pokemonEvolutionChain.is_babe ? "Yes" : "No"}
           </p>
           <p>Pokemon {detail.name} evolution</p>
-          {/* {pokemonEvolutionChain.evolves_to.map((evolution, i) => (
-            <p key={i}>Chain {evolution}</p>
-          ))} */}
+          <Evolution evolves_to={[pokemonEvolutionChain]} />
+        </>
+      ) : (
+        <>
+          <h2>This pokemon has no evolution chain</h2>
         </>
       )}
     </>

@@ -106,9 +106,14 @@ class pokeApiService {
   async fetchPokemonEvolution(
     pokemonId: number
   ): Promise<PokedexApiResult<EvolutionChain>> {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/evolution-chain/${pokemonId}`
+    const pokemonSpecies = await fetch(
+      `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
     );
+
+    const { evolution_chain } = await pokemonSpecies.json();
+
+    const response = await fetch(evolution_chain.url);
+
     if (response.ok) {
       this.apiResult.result = await response.json();
       return this.apiResult;

@@ -1,3 +1,5 @@
+import { EvolutionDetail } from "./EvolutionDetail";
+
 export default interface ChainLink {
   is_babe: boolean;
   species: {
@@ -5,4 +7,5 @@ export default interface ChainLink {
     url: string;
   };
   evolves_to: ChainLink[];
+  evolution_details: EvolutionDetail[];
 }

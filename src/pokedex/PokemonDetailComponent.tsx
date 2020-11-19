@@ -60,16 +60,18 @@ export default function PokemonDetailComponent({
           return (
             <li key={i}>
               {!!e.evolution_details.length && (
-                <p>LVL: {e.evolution_details[0].min_level}</p>
+                <>
+                  <p>LVL: {e.evolution_details[0].min_level}</p>
+                  <Link
+                    to={{
+                      pathname: `/${e.species.name}`,
+                      state: {},
+                    }}
+                  >
+                    {e.species.name}
+                  </Link>
+                </>
               )}
-              <Link
-                to={{
-                  pathname: `/${e.species.name}`,
-                  state: {},
-                }}
-              >
-                {e.species.name}
-              </Link>
               {!!e.evolves_to.length && <Evolution evolves_to={e.evolves_to} />}
             </li>
           );
@@ -97,7 +99,7 @@ export default function PokemonDetailComponent({
           ))}
         </>
       )}
-      {pokemonEvolutionChain ? (
+      {pokemonEvolutionChain && (
         <>
           <h2>Chain:</h2>
           <p>
@@ -106,10 +108,6 @@ export default function PokemonDetailComponent({
           </p>
           <p>Pokemon {detail.name} evolution</p>
           <Evolution evolves_to={[pokemonEvolutionChain]} />
-        </>
-      ) : (
-        <>
-          <h2>This pokemon has no evolution chain</h2>
         </>
       )}
     </>

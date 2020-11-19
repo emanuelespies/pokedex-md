@@ -1,0 +1,36 @@
+@import "../../shared/style/main";
+
+.pokemonPreview {
+  color: white;
+  text-decoration: none;
+  text-transform: capitalize;
+
+  figure {
+    display: flex;
+  }
+
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: auto;
+    min-height: 115px;
+  }
+
+  h3 {
+    @extend .title;
+    flex-grow: 1;
+    margin-bottom: auto;
+  }
+
+  h4 {
+    @extend .subtitle;
+    margin-top: auto;
+  }
+
+  img {
+    margin-top: auto;
+    margin-left: auto;
+    width: 115px;
+  }
+}

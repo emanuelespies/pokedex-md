@@ -1,0 +1,123 @@
+@import "./reset";
+@import "../fonts/OpenSans";
+@import "./constants";
+
+body {
+  background: $bg-color;
+  color: $main-color;
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+}
+
+button {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background: #0069ed;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: sans-serif;
+  font-size: 1rem;
+  line-height: 1;
+  margin: 0;
+  padding: 1rem 2rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background 250ms ease-in-out, transform 150ms ease;
+
+  &:focus {
+    outline: #f5f5f5;
+  }
+}
+
+/* Types of pokemons */
+.type-bug {
+  background-color: $green;
+  @include ripple($green);
+}
+.type-grass {
+  background-color: $green-dark;
+
+  @include ripple($green-dark);
+}
+
+.type-ice {
+  background-color: $blue;
+  @include ripple($blue);
+}
+
+.type-water {
+  background-color: $blue-dark;
+  @include ripple($blue-dark);
+}
+
+.type-flying {
+  background-color: $purple-light;
+  @include ripple($purple-light);
+}
+
+.type-dragon {
+  background-color: $purple;
+  @include ripple($purple);
+}
+
+.type-ghost {
+  background-color: $purple-dark;
+  @include ripple($purple-dark);
+}
+
+.type-electric {
+  background-color: $yellow;
+  @include ripple($yellow);
+}
+
+.type-ground {
+  background-color: $orange;
+  @include ripple($orange);
+}
+
+.type-rock {
+  background-color: $brown;
+  @include ripple($brown);
+}
+
+.type-dark {
+  background-color: $brown-dark;
+  @include ripple($brown-dark);
+}
+
+.type-fire {
+  background-color: $red;
+  @include ripple($red);
+}
+
+.type-fighting {
+  background-color: $red-dark;
+  @include ripple($red-dark);
+}
+
+.type-steel {
+  background-color: $gray;
+  @include ripple($gray);
+}
+
+.type-normal {
+  background-color: $gray-dark;
+  @include ripple($gray-dark);
+}
+
+.type-fairy {
+  background-color: $pink-light;
+  @include ripple($pink-light);
+}
+
+.type-psychic {
+  background-color: $pink;
+  @include ripple($pink);
+}
+
+.type-poison {
+  background-color: $pink-dark;
+  @include ripple($pink-dark);
+}

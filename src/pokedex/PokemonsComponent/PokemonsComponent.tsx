@@ -1,8 +1,14 @@
+import {
+  faChevronLeft,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import PokemonsApiResourceList from "../services/models/interfaces/PokemonsApiResourceList";
-import pokeApiService from "../services/pokeApiService";
-import Loading from "../shared/Loading";
-import PokemonComponent from "./PokemonComponent";
+import PokemonsApiResourceList from "../../services/models/interfaces/PokemonsApiResourceList";
+import pokeApiService from "../../services/pokeApiService";
+import Loading from "../../shared/Loading";
+import PokemonComponent from "../PokemonComponent/PokemonComponent";
+import "./PokemonsComponent.scss";
 
 export default function PokemonsComponent() {
   /** store the api result */
@@ -65,29 +71,32 @@ export default function PokemonsComponent() {
 
       {pokemonApiResource && (
         <section className="pokemon-list">
-          <button
-            disabled={page === 1}
-            onClick={() => {
-              setPage(page - 1);
-              setOffset(offset - fetchAmount);
-            }}
-          >
-            Prev
-          </button>
-          <button
-            disabled={totalPokemonsAvailable / fetchAmount === page}
-            onClick={() => {
-              setOffset(fetchAmount + offset);
-              setPage(page + 1);
-            }}
-          >
-            Next
-          </button>
           <ul>
             {pokemonApiResource?.results?.map((pokemon, index) => {
               return <PokemonComponent key={index} url={pokemon.url} />;
             })}
           </ul>
+          <div className="pagination">
+            <button
+              disabled={page === 1}
+              onClick={() => {
+                setPage(page - 1);
+                setOffset(offset - fetchAmount);
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
+            <h4>Page {page}</h4>
+            <button
+              disabled={totalPokemonsAvailable / fetchAmount === page}
+              onClick={() => {
+                setOffset(fetchAmount + offset);
+                setPage(page + 1);
+              }}
+            >
+              <FontAwesomeIcon icon={faChevronRight} />
+            </button>
+          </div>
         </section>
       )}
     </>

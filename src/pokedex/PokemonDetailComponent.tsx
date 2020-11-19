@@ -24,24 +24,22 @@ export default function PokemonDetailComponent({
 
   /** if user access the route directly, we fetch the pokemon detail data */
   useEffect(() => {
-    if (!detail) {
-      const fetchData = async () => {
-        const apiResult = await pokeApiService.fetchPokemonDetailByName(name);
-        if (!apiResult.message) {
-          setDetail(apiResult.result);
-          setError("");
-        } else {
-          setError(apiResult.message);
-        }
-      };
-      fetchData();
-    }
-  }, [name, detail]);
+    const fetchData = async () => {
+      const apiResult = await pokeApiService.fetchPokemonDetailByName(name);
+      if (!apiResult.message) {
+        setDetail(apiResult.result);
+        setError("");
+      } else {
+        setError(apiResult.message);
+      }
+    };
+    fetchData();
+  }, [name]);
 
   /** Once loaded, we get the pokemon evolution details */
   useEffect(() => {
     if (detail) {
-      const fetchData = async () => {
+      const fetchEvolution = async () => {
         const apiResult = await pokeApiService.fetchPokemonEvolution(detail.id);
         if (!apiResult.message) {
           setPokemonEvolutionChain(apiResult.result.chain);
@@ -50,7 +48,7 @@ export default function PokemonDetailComponent({
           setError(apiResult.message);
         }
       };
-      fetchData();
+      fetchEvolution();
     }
   }, [detail]);
 
@@ -61,10 +59,17 @@ export default function PokemonDetailComponent({
         {evolves_to.map((e: ChainLink, i) => {
           return (
             <li key={i}>
-              {e.species.name}
               {!!e.evolution_details.length && (
                 <p>LVL: {e.evolution_details[0].min_level}</p>
               )}
+              <Link
+                to={{
+                  pathname: `/${e.species.name}`,
+                  state: {},
+                }}
+              >
+                {e.species.name}
+              </Link>
               {!!e.evolves_to.length && <Evolution evolves_to={e.evolves_to} />}
             </li>
           );

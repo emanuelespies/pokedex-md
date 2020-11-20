@@ -1,43 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import PokemonDetail from "../../services/models/interfaces/PokemonDetail";
 import { PokemonComponentProps } from "../../services/models/types/PokemonComponentProps";
-import pokeApiService from "../../services/pokeApiService";
+import useFetch from "../../services/useFetch";
 import Loading from "../../shared/Loading";
 import "./PokemonComponent.scss";
 
 export default function PokemonComponent({ url }: PokemonComponentProps) {
   /** Store the pokemon detail once received the value from api */
   const [pokemonDetail, setPokemonDetail] = useState<PokemonDetail>();
-  /** loading const from api */
+  /** Loading const from api */
   const [loading, setLoading] = useState<boolean>(true);
   /** Error Managing */
-  const [error, setError] = useState<string>("");
-  /** prevent change of state on unmount */
-  const isMounted = React.useRef(true);
+  const [error, setError] = useState<boolean>(false);
 
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  /** fetchs the pokemon detail */
-  useEffect(() => {
-    const fetchData = async () => {
-      const apiResult = await pokeApiService.fetchPokemonDetail(
-        url,
-        setLoading
-      );
-      if (!apiResult.message && isMounted.current) {
-        setPokemonDetail(apiResult.result);
-        setError("");
-      } else {
-        setError(apiResult.message);
-      }
-    };
-    fetchData();
-  }, [url]);
+  useFetch({ url, setData: setPokemonDetail, setLoading, setError });
 
   const haveImage = pokemonDetail?.sprites?.front_default !== null;
 
@@ -52,7 +29,7 @@ export default function PokemonComponent({ url }: PokemonComponentProps) {
       {pokemonDetail && (
         <li
           key={pokemonDetail.id}
-          className={`type-${pokemonDetail.types[0].type.name}`}
+          className={`type-${pokemonDetail?.types[0]?.type?.name}`}
         >
           <Link
             className="pokemon-preview"

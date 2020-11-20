@@ -1,32 +1,29 @@
 @import "./style/main.scss";
 
 .error {
-  margin-top: 40px;
-  text-align: center;
+  background-color: lighten($error, 35%);
+  border: 1px solid darken($error, 10%);
+  align-items: center;
+  display: flex;
+  margin: -24px -24px 24px -24px;
+  padding: $padding;
+  width: 100%;
 
   h3 {
-    font-size: 55px;
-    margin-top: 42px;
-
-    @media (min-width: 712px) {
-      font-size: 75px;
-    }
+    font-size: 14px;
+    color: darken($error, 15%);
   }
   .error-icon {
     color: $error;
-    font-size: 80px;
-
-    @media (min-width: 712px) {
-      font-size: 120px;
-    }
+    margin-right: 12px;
   }
 
   .back-link {
     display: block;
-    margin-top: 22px;
-
+    font-size: 12px;
+    margin-left: auto;
     .fa-arrow-left {
-      margin-right: 12px;
+      margin-right: 8px;
     }
   }
 }

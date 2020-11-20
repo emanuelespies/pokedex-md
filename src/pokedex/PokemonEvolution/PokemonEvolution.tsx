@@ -1,7 +1,6 @@
 import ChainLink from "../../services/models/interfaces/ChainLink";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import pokeApiService from "../../services/pokeApiService";
 import PokemonDetail from "../../services/models/interfaces/PokemonDetail";
 import Loading from "../../shared/Loading";
 import "./PokemonEvolution.scss";
@@ -12,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import PokemonImage from "../../shared/PokemonImage";
 import ErrorComponent from "../../shared/ErrorComponent";
+import useFetch from "../../services/useFetch";
 
 export default function PokemonEvolution({
   evolves_to,
@@ -22,35 +22,12 @@ export default function PokemonEvolution({
   /** store the detail from props.location */
   const [detail, setDetail] = useState<PokemonDetail>();
   /** Error Managing */
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
   /** loading const from api */
   const [loading, setLoading] = useState<boolean>(true);
 
-  /** prevent change of state on unmount */
-  const isMounted = React.useRef(true);
-
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  /** if user access the route directly, we fetch the pokemon detail data */
-  useEffect(() => {
-    const fetchData = async () => {
-      const apiResult = await pokeApiService.fetchPokemonDetailByName(
-        name,
-        setLoading
-      );
-      if (!apiResult.message && isMounted.current) {
-        setDetail(apiResult.result);
-        setError("");
-      } else {
-        setError(apiResult.message);
-      }
-    };
-    fetchData();
-  }, [name, evolves_to]);
+  const url: string = `https://pokeapi.co/api/v2/pokemon/${name}`;
+  useFetch({ url, setData: setDetail, setLoading, setError });
 
   const RecursiveEvolution = ({ evolves_to }: { evolves_to: ChainLink[] }) => {
     return (
@@ -101,7 +78,7 @@ export default function PokemonEvolution({
   return (
     <>
       {!error && loading && <Loading />}
-      {error && <ErrorComponent error={error} />}
+      {error && <ErrorComponent />}
       {detail && (
         <>
           <section className="evolution-first">

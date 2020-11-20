@@ -1,41 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import PokemonDetail from "../services/models/interfaces/PokemonDetail";
 import { PokemonImageProps } from "../services/models/types/PokemonImageProps";
-import pokeApiService from "../services/pokeApiService";
+import useFetch from "../services/useFetch";
+import ErrorComponent from "./ErrorComponent";
 import Loading from "./Loading";
 
 export default function PokemonImage({ name }: PokemonImageProps) {
   /** store the detail from props.location */
-  const [image, setImage] = useState<string>();
+  const [detail, setDetail] = useState<PokemonDetail>();
   /** loading const from api */
   const [loading, setLoading] = useState<boolean>(true);
+  /** Error Managing */
+  const [error, setError] = useState<boolean>(false);
 
-  /** prevent change of state on unmount */
-  const isMounted = React.useRef(true);
-
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  /** get pokemon image */
-  useEffect(() => {
-    const fetchData = async () => {
-      const apiResult = await pokeApiService.fetchPokemonDetailByName(
-        name,
-        setLoading
-      );
-      if (!apiResult.message && isMounted.current) {
-        setImage(apiResult.result.sprites?.front_default);
-      }
-    };
-    fetchData();
-  }, [name]);
+  /** If user access the route directly, we fetch the pokemon detail data */
+  const url: string = `https://pokeapi.co/api/v2/pokemon/${name}`;
+  useFetch({ url, setData: setDetail, setLoading, setError });
 
   return (
     <>
       {loading && <Loading />}
-      {image !== null && <img src={image} alt={`Pokemon is ${name}`} />}
+      {error && <ErrorComponent />}
+      {detail?.sprites.front_default !== null && (
+        <img src={detail?.sprites.front_default} alt={`Pokemon is ${name}`} />
+      )}
     </>
   );
 }

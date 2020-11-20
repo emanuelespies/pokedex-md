@@ -2,81 +2,71 @@ import { faDotCircle } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import ChainLink from "../../services/models/interfaces/ChainLink";
 import PokemonDetail from "../../services/models/interfaces/PokemonDetail";
 import { PokemonDetailComponentProps } from "../../services/models/types/PokemonDetailComponentProps";
-import pokeApiService from "../../services/pokeApiService";
 import Loading from "../../shared/Loading";
 import ErrorComponent from "../../shared/ErrorComponent";
 import PokemonEvolution from "../PokemonEvolution/PokemonEvolution";
 import "./PokemonDetailComponent.scss";
+import useFetch from "../../services/useFetch";
+import EvolutionChain from "../../services/models/interfaces/EvolutionChain";
+import PokemonSpecies from "../../services/models/interfaces/PokemonSpecies";
 
 export default function PokemonDetailComponent({
   location,
 }: PokemonDetailComponentProps) {
-  /** the url is the identifier of our router and pokemon */
+  /** The url is the identifier of our router and pokemon */
   const { name }: { name: string } = useParams();
-  /** store the detail from props.location */
+  /** Store the detail from props.location */
   const [detail, setDetail] = useState<PokemonDetail>(
     location.state?.pokemonDetail
   );
   /** Error Managing */
-  const [error, setError] = useState<string>("");
-  /** store the pokemon evolution */
+  const [error, setError] = useState<boolean>(false);
+  /** Store the pokemon evolution */
   const [pokemonEvolutionChain, setPokemonEvolutionChain] = useState<
-    ChainLink
+    EvolutionChain
   >();
-  /** loading const from api */
+  /** Loading const from api */
   const [loading, setLoading] = useState<boolean>(true);
 
-  /** prevent change of state on unmount */
-  const isMounted = React.useRef(true);
+  /** If user access the route directly, we fetch the pokemon detail data */
+  const url: string = `https://pokeapi.co/api/v2/pokemon/${name}`;
+  useFetch({ url, setData: setDetail, setLoading, setError });
 
-  useEffect(() => {
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  /** if user access the route directly, we fetch the pokemon detail data */
-  useEffect(() => {
-    const fetchData = async () => {
-      const apiResult = await pokeApiService.fetchPokemonDetailByName(
-        name,
-        setLoading
-      );
-      if (!apiResult.message && isMounted.current) {
-        setDetail(apiResult.result);
-        setError("");
-      } else {
-        setError(apiResult.message);
-      }
-    };
-    fetchData();
-  }, [name]);
-
-  /** Once loaded, we get the pokemon evolution details */
+  /* Fetch evolution chain from species */
   useEffect(() => {
     if (detail) {
-      const fetchEvolution = async () => {
-        const apiResult = await pokeApiService.fetchPokemonEvolution(
-          detail.id,
-          setLoading
-        );
-        if (!apiResult.message && isMounted.current) {
-          setPokemonEvolutionChain(apiResult.result.chain);
-          setError("");
-        } else {
-          setError(apiResult.message);
+      const fetchData = async () => {
+        try {
+          const resDetail = await fetch(
+            `https://pokeapi.co/api/v2/pokemon-species/${detail.id}`
+          );
+          if (resDetail.ok) {
+            const pokemonSpecies: PokemonSpecies = await resDetail.json();
+            const response = await fetch(pokemonSpecies.evolution_chain.url);
+            if (response.ok) {
+              const json: EvolutionChain = await response.json();
+              setPokemonEvolutionChain(json);
+            } else {
+              throw response;
+            }
+          } else {
+            throw resDetail;
+          }
+        } catch (e) {
+          setError(true);
+        } finally {
+          setLoading(false);
         }
       };
-      fetchEvolution();
+      fetchData();
     }
   }, [detail]);
 
   return (
     <>
-      {error && <ErrorComponent error={error} />}
+      {error && <ErrorComponent />}
 
       {detail && (
         <>
@@ -121,8 +111,10 @@ export default function PokemonDetailComponent({
                   <h3 className="page-title">Pokemon evolution</h3>
 
                   <div className="evolution-chain">
-                    {pokemonEvolutionChain.evolves_to.length ? (
-                      <PokemonEvolution evolves_to={[pokemonEvolutionChain]} />
+                    {pokemonEvolutionChain.chain.evolves_to?.length ? (
+                      <PokemonEvolution
+                        evolves_to={[pokemonEvolutionChain.chain]}
+                      />
                     ) : (
                       <>
                         {detail?.sprites?.front_default !== null && (

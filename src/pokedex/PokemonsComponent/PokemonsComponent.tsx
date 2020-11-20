@@ -5,7 +5,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import PokemonsApiResourceList from "../../services/models/interfaces/PokemonsApiResourceList";
-import pokeApiService from "../../services/pokeApiService";
+import useFetch from "../../services/useFetch";
 import ErrorComponent from "../../shared/ErrorComponent";
 import Loading from "../../shared/Loading";
 import PokemonComponent from "../PokemonComponent/PokemonComponent";
@@ -40,36 +40,25 @@ export default function PokemonsComponent() {
   /** the offset to get the next available list of items */
   const [offset, setOffset] = useState<number>(0);
   /** Error Managing */
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
 
-  /** fetchData only once if we dont have anything in the localStorage */
+  /** If user access the route directly, we fetch the pokemon detail data */
+  const url: string = `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${fetchAmount}`;
+  useFetch({ url, setData: setPokemonApiResource, setLoading, setError });
+
   useEffect(() => {
-    const fetchData = async () => {
-      const apiResult = await pokeApiService.fetchPokemons(
-        fetchAmount,
-        offset,
-        setLoading
+    if (Object.keys(pokemonApiResource).length) {
+      setTotalPokemonsAvailable(pokemonApiResource.count);
+    }
+
+    if (!Object.keys(pokemonApiResource).length && page === 1) {
+      localStorage.setItem(
+        "pokemonApiResource",
+        JSON.stringify(pokemonApiResource)
       );
-
-      if (!apiResult.message) {
-        setPokemonApiResource(apiResult.result);
-        setTotalPokemonsAvailable(1050);
-        setError("");
-
-        // we only want to store the first load to speed up refresh for return users
-        if (!Object.keys(pokemonApiResource).length && page === 1) {
-          localStorage.setItem(
-            "pokemonApiResource",
-            JSON.stringify(apiResult.result)
-          );
-        }
-      } else {
-        setError(apiResult.message);
-      }
-    };
-    fetchData();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [offset]);
+  }, [pokemonApiResource]);
 
   /** when pagination is used, scroll to top */
   const scrollToTop = () => {
@@ -80,7 +69,7 @@ export default function PokemonsComponent() {
     <>
       {!error && loading && <Loading />}
 
-      {error && <ErrorComponent error={error} />}
+      {error && <ErrorComponent />}
 
       {pokemonApiResource && (
         <>

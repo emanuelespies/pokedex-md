@@ -1,0 +1,132 @@
+@import "../../shared/style/main";
+
+.pokemon-detail {
+  height: 100%;
+  margin: -24px;
+  padding: $padding;
+
+  header {
+    background-image: url("../../shared/style/pokeball-transparent.svg");
+    background-size: 289.13px 205.8px;
+    background-repeat: no-repeat;
+    background-position: calc(100% + 116px) -61px;
+    height: 285px;
+    margin: -24px;
+    padding: $padding;
+
+    @media (min-width: 712px) {
+      background-position: calc(100% + 166px) -163px;
+      background-size: 428.13px 429.66px;
+      font-size: 42px;
+    }
+
+    .breadcrumb {
+      @extend .limit-resolution;
+      align-items: center;
+      display: flex;
+      text-transform: capitalize;
+
+      h1 {
+        color: white;
+        display: inline;
+        margin-left: 12px;
+      }
+
+      a {
+        color: white;
+        text-decoration: none;
+
+        em {
+          font-size: 22px;
+          margin-right: 12px;
+
+          @media (min-width: 712px) {
+            font-size: 42px;
+          }
+        }
+      }
+    }
+  }
+
+  .details {
+    @extend .limit-resolution;
+    color: white;
+    margin-top: 30px;
+
+    @media (min-width: 712px) {
+      margin-top: 0;
+      display: flex;
+    }
+
+    .details-wrapper {
+      @media (min-width: 712px) {
+        align-self: center;
+        order: 2;
+      }
+    }
+
+    @media (min-width: 712px) {
+      .page-subtitle {
+        font-size: 28px;
+      }
+    }
+  }
+
+  .types {
+    @extend .text;
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+
+    @media (min-width: 712px) {
+      font-size: 24px;
+      margin-top: 12px;
+    }
+
+    .type-list {
+      display: flex;
+      gap: 16px;
+      text-transform: capitalize;
+    }
+  }
+
+  .img-wrapper {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: 215px;
+
+    @media (min-width: 712px) {
+      order: 1;
+    }
+
+    img {
+      min-width: 215px;
+    }
+  }
+}
+
+.pokemon-evolution {
+  @extend .limit-resolution;
+  background-color: white !important;
+  border-radius: 20px 20px 0 0;
+  height: 100%;
+  margin-top: -75px;
+  padding: 75px 24px 24px 24px;
+  text-align: center;
+
+  @media (min-width: 712px) {
+    padding-top: 100px;
+    text-align: left;
+  }
+
+  h3 {
+    font-weight: 300;
+    margin-bottom: 24px;
+
+    @media (min-width: 712px) {
+      font-size: 42px;
+      margin-bottom: 48px;
+    }
+  }
+}

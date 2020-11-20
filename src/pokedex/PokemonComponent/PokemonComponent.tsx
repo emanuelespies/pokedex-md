@@ -11,7 +11,9 @@ export default function PokemonComponent({ url }: PokemonComponentProps) {
   const [pokemonDetail, setPokemonDetail] = useState<PokemonDetail>();
   /** loading const from api */
   const [loading, setLoading] = useState<boolean>(true);
-
+  /** Error Managing */
+  const [error, setError] = useState<string>("");
+  /** prevent change of state on unmount */
   const isMounted = React.useRef(true);
 
   useEffect(() => {
@@ -29,6 +31,9 @@ export default function PokemonComponent({ url }: PokemonComponentProps) {
       );
       if (!apiResult.message && isMounted.current) {
         setPokemonDetail(apiResult.result);
+        setError("");
+      } else {
+        setError(apiResult.message);
       }
     };
     fetchData();
@@ -38,7 +43,7 @@ export default function PokemonComponent({ url }: PokemonComponentProps) {
 
   return (
     <>
-      {loading && (
+      {!error && loading && (
         <li key={"loading"}>
           <Loading />
         </li>

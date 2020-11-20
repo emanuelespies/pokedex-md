@@ -1,0 +1,32 @@
+@import "./style/main.scss";
+
+.error {
+  margin-top: 40px;
+  text-align: center;
+
+  h3 {
+    font-size: 55px;
+    margin-top: 42px;
+
+    @media (min-width: 712px) {
+      font-size: 75px;
+    }
+  }
+  .error-icon {
+    color: $error;
+    font-size: 80px;
+
+    @media (min-width: 712px) {
+      font-size: 120px;
+    }
+  }
+
+  .back-link {
+    display: block;
+    margin-top: 22px;
+
+    .fa-arrow-left {
+      margin-right: 12px;
+    }
+  }
+}

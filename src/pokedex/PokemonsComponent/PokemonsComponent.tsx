@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import PokemonsApiResourceList from "../../services/models/interfaces/PokemonsApiResourceList";
 import pokeApiService from "../../services/pokeApiService";
+import ErrorComponent from "../../shared/ErrorComponent";
 import Loading from "../../shared/Loading";
 import PokemonComponent from "../PokemonComponent/PokemonComponent";
 import "./PokemonsComponent.scss";
@@ -25,6 +26,9 @@ export default function PokemonsComponent() {
     }
   });
 
+  /** loading const from api */
+  const [loading, setLoading] = useState<boolean>(true);
+
   /** store the current page we are in */
   const [page, setPage] = useState<number>(1);
   /** the total of pokemons available in the api */
@@ -41,7 +45,11 @@ export default function PokemonsComponent() {
   /** fetchData only once if we dont have anything in the localStorage */
   useEffect(() => {
     const fetchData = async () => {
-      const apiResult = await pokeApiService.fetchPokemons(fetchAmount, offset);
+      const apiResult = await pokeApiService.fetchPokemons(
+        fetchAmount,
+        offset,
+        setLoading
+      );
 
       if (!apiResult.message) {
         setPokemonApiResource(apiResult.result);
@@ -70,9 +78,9 @@ export default function PokemonsComponent() {
 
   return (
     <>
-      {!error && !pokemonApiResource && <Loading />}
+      {!error && loading && <Loading />}
 
-      {error && <p> {error} </p>}
+      {error && <ErrorComponent error={error} />}
 
       {pokemonApiResource && (
         <>

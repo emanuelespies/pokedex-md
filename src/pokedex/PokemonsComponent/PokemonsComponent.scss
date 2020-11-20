@@ -1,5 +1,11 @@
 @import "../../shared/style/main";
 
+.loading {
+  display: block;
+  margin: 0 auto;
+  width: 48px;
+}
+
 .pokemon-list {
   margin-top: 24px;
   max-width: 1200px;

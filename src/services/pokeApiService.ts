@@ -34,13 +34,15 @@ class pokeApiService {
    *
    * @param {number} limit - the result limit for each call
    * @param {number} offset - where to start in the list
+   * @param {Dispatch<SetStateAction<boolean>>} setLoading - set loading to true or false
    * @return {Promise<PokemonsApiResourceList>}
    * @memberof pokeApiService
    */
 
   async fetchPokemons(
     limit: number,
-    offset: number
+    offset: number,
+    setLoading: Dispatch<SetStateAction<boolean>>
   ): Promise<PokedexApiResult<PokemonsApiResourceList>> {
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`
@@ -48,6 +50,7 @@ class pokeApiService {
     if (response.ok) {
       this.apiResult.result = await response.json();
       this.apiResult.message = "";
+      setLoading(false);
       return this.apiResult;
     } else {
       this.apiResult.result = response;
@@ -60,6 +63,7 @@ class pokeApiService {
    * Get Pokemon Detail from api
    *
    * @param {string} url - the pokemon name to get info for
+   * @param {Dispatch<SetStateAction<boolean>>} setLoading - set loading to true or false
    * @return {Promise<PokemonDetail>}
    * @memberof pokeApiService
    */
@@ -84,16 +88,19 @@ class pokeApiService {
    * Get Pokemon Detail from api
    *
    * @param {string} url - the pokemon name to get info for
+   * @param {Dispatch<SetStateAction<boolean>>} setLoading - set loading to true or false
    * @return {Promise<PokemonDetail>}
    * @memberof pokeApiService
    */
   async fetchPokemonDetailByName(
-    name: string
+    name: string,
+    setLoading: Dispatch<SetStateAction<boolean>>
   ): Promise<PokedexApiResult<PokemonDetail>> {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
     if (response.ok) {
       this.apiResult.result = await response.json();
       this.apiResult.message = "";
+      setLoading(false);
       return this.apiResult;
     } else {
       this.apiResult.result = response;
@@ -106,11 +113,13 @@ class pokeApiService {
    * Get the evolution chain for the pokemon id
    *
    * @param {number} pokemonId
+   * @param {Dispatch<SetStateAction<boolean>>} setLoading - set loading to true or false
    * @return {Promise<EvolutionChain>}
    * @memberof pokeApiService
    */
   async fetchPokemonEvolution(
-    pokemonId: number
+    pokemonId: number,
+    setLoading: Dispatch<SetStateAction<boolean>>
   ): Promise<PokedexApiResult<EvolutionChain>> {
     const pokemonSpecies = await fetch(
       `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}`
@@ -123,6 +132,7 @@ class pokeApiService {
     if (response.ok) {
       this.apiResult.result = await response.json();
       this.apiResult.message = "";
+      setLoading(false);
       return this.apiResult;
     } else {
       this.apiResult.result = response;

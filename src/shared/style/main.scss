@@ -2,11 +2,26 @@
 @import "../fonts/OpenSans";
 @import "./constants";
 
+html,
+body,
+#root {
+  height: 100%;
+}
+
 body {
   background: $bg-color;
+  background-image: url("./pokeball.svg");
+  background-size: 289.13px 205.8px;
+  background-repeat: no-repeat;
+  background-position: calc(100% + 116px) -61px;
   color: $main-color;
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 16px;
+
+  @media (min-width: 712px) {
+    background-position: calc(100% + 194px) -181px;
+    background-size: 497.11px 498.9px;
+  }
 }
 
 button {
@@ -31,93 +46,169 @@ button {
   }
 }
 
+.wrapper {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
 /* Types of pokemons */
 .type-bug {
   background-color: $green;
   @include ripple($green);
+
+  .color {
+    color: $green;
+  }
 }
 .type-grass {
   background-color: $green-dark;
-
   @include ripple($green-dark);
+
+  .color {
+    color: $green-dark;
+  }
 }
 
 .type-ice {
   background-color: $blue;
   @include ripple($blue);
+
+  .color {
+    color: $blue;
+  }
 }
 
 .type-water {
   background-color: $blue-dark;
   @include ripple($blue-dark);
+
+  .color {
+    color: $blue-dark;
+  }
 }
 
 .type-flying {
   background-color: $purple-light;
   @include ripple($purple-light);
+
+  .color {
+    color: $purple-light;
+  }
 }
 
 .type-dragon {
   background-color: $purple;
   @include ripple($purple);
+
+  .color {
+    color: $purple;
+  }
 }
 
 .type-ghost {
   background-color: $purple-dark;
   @include ripple($purple-dark);
+
+  .color {
+    color: $purple-dark;
+  }
 }
 
 .type-electric {
   background-color: $yellow;
   @include ripple($yellow);
+
+  .color {
+    color: $yellow;
+  }
 }
 
 .type-ground {
   background-color: $orange;
   @include ripple($orange);
+
+  .color {
+    color: $orange;
+  }
 }
 
 .type-rock {
   background-color: $brown;
   @include ripple($brown);
+
+  .color {
+    color: $brown;
+  }
 }
 
 .type-dark {
   background-color: $brown-dark;
   @include ripple($brown-dark);
+
+  .color {
+    color: $brown-dark;
+  }
 }
 
 .type-fire {
   background-color: $red;
   @include ripple($red);
+
+  .color {
+    color: $red;
+  }
 }
 
 .type-fighting {
   background-color: $red-dark;
   @include ripple($red-dark);
+
+  .color {
+    color: $red-dark;
+  }
 }
 
 .type-steel {
   background-color: $gray;
   @include ripple($gray);
+
+  .color {
+    color: $gray;
+  }
 }
 
 .type-normal {
   background-color: $gray-dark;
   @include ripple($gray-dark);
+
+  .color {
+    color: $gray-dark;
+  }
 }
 
 .type-fairy {
   background-color: $pink-light;
   @include ripple($pink-light);
+
+  .color {
+    color: $pink-light;
+  }
 }
 
 .type-psychic {
   background-color: $pink;
   @include ripple($pink);
+
+  .color {
+    color: $pink;
+  }
 }
 
 .type-poison {
   background-color: $pink-dark;
   @include ripple($pink-dark);
+
+  .color {
+    color: $pink-dark;
+  }
 }

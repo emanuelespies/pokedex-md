@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import EvolutionChain from "./models/interfaces/EvolutionChain";
 import PokemonDetail from "./models/interfaces/PokemonDetail";
 import PokemonsApiResourceList from "./models/interfaces/PokemonsApiResourceList";
@@ -27,7 +28,7 @@ class pokeApiService {
    * @type {string}
    * @memberof pokeApiService
    */
-  private errorMessage: string = "Error whilte loading ";
+  private errorMessage: string = "Error while loading ";
   /**
    * Fetch Pokemons from api
    *
@@ -46,6 +47,7 @@ class pokeApiService {
     );
     if (response.ok) {
       this.apiResult.result = await response.json();
+      this.apiResult.message = "";
       return this.apiResult;
     } else {
       this.apiResult.result = response;
@@ -62,11 +64,14 @@ class pokeApiService {
    * @memberof pokeApiService
    */
   async fetchPokemonDetail(
-    url: string
+    url: string,
+    setLoading: Dispatch<SetStateAction<boolean>>
   ): Promise<PokedexApiResult<PokemonDetail>> {
     const response = await fetch(url);
     if (response.ok) {
       this.apiResult.result = await response.json();
+      this.apiResult.message = "";
+      setLoading(false);
       return this.apiResult;
     } else {
       this.apiResult.result = response;
@@ -88,6 +93,7 @@ class pokeApiService {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
     if (response.ok) {
       this.apiResult.result = await response.json();
+      this.apiResult.message = "";
       return this.apiResult;
     } else {
       this.apiResult.result = response;
@@ -116,6 +122,7 @@ class pokeApiService {
 
     if (response.ok) {
       this.apiResult.result = await response.json();
+      this.apiResult.message = "";
       return this.apiResult;
     } else {
       this.apiResult.result = response;

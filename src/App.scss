@@ -1,9 +1,6 @@
 @import "./shared/style/main";
 
 main {
-  background-image: url("./shared/style/pokeball.svg");
-  background-size: 302.51px 303.6px;
-  background-repeat: no-repeat;
-  background-position: calc(100% + 110px) -110px;
+  height: 100%;
   padding: $padding;
 }

@@ -63,6 +63,11 @@ export default function PokemonsComponent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [offset]);
 
+  /** when pagination is used, scroll to top */
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <>
       {!error && !pokemonApiResource && <Loading />}
@@ -70,34 +75,39 @@ export default function PokemonsComponent() {
       {error && <p> {error} </p>}
 
       {pokemonApiResource && (
-        <section className="pokemon-list">
-          <ul>
-            {pokemonApiResource?.results?.map((pokemon, index) => {
-              return <PokemonComponent key={index} url={pokemon.url} />;
-            })}
-          </ul>
+        <>
+          <section className="pokemon-list">
+            <ul>
+              {pokemonApiResource?.results?.map((pokemon, index) => {
+                return <PokemonComponent key={index} url={pokemon.url} />;
+              })}
+            </ul>
+          </section>
           <div className="pagination">
-            <button
-              disabled={page === 1}
-              onClick={() => {
-                setPage(page - 1);
-                setOffset(offset - fetchAmount);
-              }}
-            >
-              <FontAwesomeIcon icon={faChevronLeft} />
-            </button>
-            <h4>Page {page}</h4>
-            <button
-              disabled={totalPokemonsAvailable / fetchAmount === page}
-              onClick={() => {
-                setOffset(fetchAmount + offset);
-                setPage(page + 1);
-              }}
-            >
-              <FontAwesomeIcon icon={faChevronRight} />
-            </button>
+            <div className="pagination-wrapper">
+              <button
+                disabled={page === 1}
+                onClick={() => {
+                  setPage(page - 1);
+                  setOffset(offset - fetchAmount);
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronLeft} />
+              </button>
+              <h4>Page {page}</h4>
+              <button
+                disabled={totalPokemonsAvailable / fetchAmount === page}
+                onClick={() => {
+                  scrollToTop();
+                  setOffset(fetchAmount + offset);
+                  setPage(page + 1);
+                }}
+              >
+                <FontAwesomeIcon icon={faChevronRight} />
+              </button>
+            </div>
           </div>
-        </section>
+        </>
       )}
     </>
   );

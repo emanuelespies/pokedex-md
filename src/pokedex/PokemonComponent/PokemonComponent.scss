@@ -1,6 +1,6 @@
 @import "../../shared/style/main";
 
-.pokemonPreview {
+.pokemon-preview {
   color: white;
   text-decoration: none;
   text-transform: capitalize;
@@ -18,13 +18,11 @@
   }
 
   h3 {
-    @extend .title;
     flex-grow: 1;
     margin-bottom: auto;
   }
 
   h4 {
-    @extend .subtitle;
     margin-top: auto;
   }
 

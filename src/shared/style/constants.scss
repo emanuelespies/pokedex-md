@@ -1,6 +1,7 @@
 /* colors */
 $bg-color: #f5f5f5;
 $main-color: #444;
+$error: #d63031;
 
 $green: #1abc9c;
 $green-dark: #2ecc71;
@@ -28,9 +29,12 @@ $padding: 24px;
 .title {
   font-size: 22px;
   line-height: 150%;
+  @media (min-width: 712px) {
+    font-size: 42px;
+  }
 }
 
-.titleBold {
+.title-bold {
   @extend .title;
   font-weight: 700;
 }
@@ -38,9 +42,32 @@ $padding: 24px;
 .subtitle {
   font-size: 16px;
   font-weight: 300;
+
+  @media (min-width: 712px) {
+    font-size: 24px;
+  }
 }
 
-/* ripple effect */
+.page-title {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.page-subtitle {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.limit-resolution {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 /* Ripple effect */
 @mixin ripple($color) {
   &:hover {

@@ -2,9 +2,16 @@
 
 .pokemon-list {
   margin-top: 24px;
+  max-width: 1200px;
+  padding-bottom: 80px;
+
   ul {
     display: grid;
     gap: 24px;
+
+    @media (min-width: 712px) {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
 
     li {
       background-image: url("../../shared/style/pokeball-transparent.svg");
@@ -21,32 +28,46 @@
       }
     }
   }
+}
+.pagination {
+  background: $bg-color;
+  box-shadow: -1px -4px 10px 0px rgba(0, 0, 0, 0.2%);
+  bottom: 0;
+  height: 80px;
+  left: 0;
+  position: fixed;
+  width: 100%;
 
-  .pagination {
+  @media (min-width: 712px) {
+    height: 65px;
+  }
+
+  .pagination-wrapper {
     align-self: center;
-    justify-content: space-between;
-    background: $bg-color;
-    bottom: 0;
     display: flex;
-    height: 80px;
-    margin-left: -24px;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 1200px;
     width: 100%;
-    position: fixed;
+  }
 
-    button {
-      background: none;
-      color: $main-color;
-      font-size: 48px;
+  button {
+    background: none;
+    color: $main-color;
+    font-size: 48px;
 
-      &[disabled] {
-        color: #e6e6e6;
-      }
+    @media (min-width: 712px) {
+      font-size: 32px;
     }
 
-    h4 {
-      align-self: center;
-      font-size: 22px;
-      font-weight: 300;
+    &[disabled] {
+      color: #e6e6e6;
     }
+  }
+
+  h4 {
+    align-self: center;
+    font-size: 22px;
+    font-weight: 300;
   }
 }
